@@ -1,14 +1,16 @@
 "use client";
 import { ethers } from "ethers";
 import React, { useEffect, useContext } from "react";
-import { WalletContext } from "@/app/(overview)/layout";
 import Link from "next/link";
+import { useRecoilState } from "recoil";
+import { addressState } from "@/app/utils/recoils";
 
 const buttonStyle =
   "flex items-center justify-center h-12 w-40 text-lg font-bold text-white rounded-lg bg-blue-500 shadow-lg transition duration-300 ease-in-out hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:ring-offset-2";
 
 export default function Page() {
-  const { currentAddress, setCurrentAddress } = useContext(WalletContext);
+  // const { currentAddress, setCurrentAddress } = useContext(WalletContext);
+  const [currentAddress, setCurrentAddress] = useRecoilState(addressState);
 
   return (
     <main className="flex justify-center items-start min-h-screen p-10 pt-20">

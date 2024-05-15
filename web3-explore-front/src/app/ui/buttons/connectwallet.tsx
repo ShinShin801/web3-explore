@@ -1,11 +1,12 @@
 "use client";
-import React, { useEffect, useContext } from "react";
-import { WalletContext } from "@/app/(overview)/layout";
+import React, { useEffect, useCallback } from "react";
+import { useRecoilState } from "recoil";
+import { addressState } from "@/app/utils/recoils";
 
 export function ConnectWalletButton() {
-  const { currentAddress, setCurrentAddress } = useContext(WalletContext);
+  const [currentAddress, setCurrentAddress] = useRecoilState(addressState);
 
-  const checkIfWalletIsConnected = async () => {
+  const checkIfWalletIsConnected = useCallback(async () => {
     const { ethereum } = window as any;
     if (!ethereum) {
       console.log("Make sure you have MetaMask!");
@@ -22,7 +23,7 @@ export function ConnectWalletButton() {
     } else {
       console.log("No authorized account found");
     }
-  };
+  }, [setCurrentAddress]);
 
   const connectWallet = async () => {
     try {
@@ -48,7 +49,7 @@ export function ConnectWalletButton() {
 
   useEffect(() => {
     checkIfWalletIsConnected();
-  }, []);
+  }, [checkIfWalletIsConnected]);
 
   return (
     <>

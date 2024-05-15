@@ -17,7 +17,7 @@ const TokenCard: React.FC<TokenCardProps> = ({ token }) => {
 
   return (
     <div
-      className="max-w-sm rounded overflow-hidden shadow-lg m-2 p-4 cursor-pointer transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-xl" // ホバーエフェクトを追加
+      className="max-w-full inline-block rounded overflow-hidden shadow-lg m-2 p-4 cursor-pointer transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-xl"
       onClick={handleClick}
     >
       <div className="font-bold text-xl mb-2">{token.name}</div>
