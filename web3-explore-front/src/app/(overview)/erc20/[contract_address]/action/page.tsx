@@ -1,7 +1,8 @@
 "use client";
 const ethers = require("ethers");
-import React, { useEffect, useContext, useState } from "react";
-import { WalletContext } from "@/app/(overview)/layout";
+import React, { useEffect, useState, useCallback } from "react";
+import { useRecoilState } from "recoil";
+import { addressState } from "@/app/utils/recoils";
 
 import MyTokenContract from "@/app/utils/MyToken.json";
 
@@ -20,7 +21,7 @@ export default function Page({
 }: {
   params: { contract_address: string };
 }) {
-  const { currentAddress, setCurrentAddress } = useContext(WalletContext);
+  const [currentAddress, setCurrentAddress] = useRecoilState(addressState);
 
   const contract_address = params.contract_address;
   const tokenContractABI = MyTokenContract.abi;
@@ -68,10 +69,9 @@ export default function Page({
         if (address) {
           await tokenManager.transfer(Number(amount), address);
           alert(
-            "Token has been successfully transfered! The balance might take a while to reflect."
+            "Token has been successfully transferred! The balance might take a while to reflect."
           );
         } else {
-          // console.error("Address required for sending tokens");
           alert("Address required for sending tokens");
         }
         break;
@@ -80,7 +80,7 @@ export default function Page({
     }
   };
 
-  async function checkOwnership() {
+  const checkOwnership = useCallback(async () => {
     const token_contract = await tokenManager.connectContract();
     if (token_contract) {
       const token_owner = await token_contract!.owner();
@@ -92,7 +92,7 @@ export default function Page({
     } else {
       setIsOwner(false);
     }
-  }
+  }, [currentAddress, tokenManager]);
 
   function formatAddress(address: string | undefined): string {
     if (!address) return "N/A";
@@ -100,12 +100,8 @@ export default function Page({
   }
 
   useEffect(() => {
-    // if (!isOpen) {
-    //   setAmount("");
-    // }
     checkOwnership();
-    // console.log(`isowner: ${isOwner}`);
-  }, [currentAddress, isOwner]);
+  }, [checkOwnership]);
 
   return (
     <div className="flex flex-col justify-center items-center gap-8 my-4">

@@ -1,22 +1,10 @@
 "use client";
 import TopNav from "@/app/ui/topnav";
-import { createContext, useState, Dispatch, SetStateAction } from "react";
-
-// export type WalletContextType = string;
-export interface WalletContextType {
-  currentAddress: string | null;
-  setCurrentAddress: Dispatch<SetStateAction<string>>;
-}
-export const WalletContext = createContext<WalletContextType>({
-  currentAddress: "",
-  setCurrentAddress: () => {},
-});
+import { RecoilRoot } from "recoil";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const [currentAddress, setCurrentAddress] = useState("");
-
   return (
-    <WalletContext.Provider value={{ currentAddress, setCurrentAddress }}>
+    <RecoilRoot>
       <div className="flex flex-col h-screen md:overflow-hidden">
         <div className="flex-none">
           <TopNav />
@@ -25,6 +13,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           {children}
         </div>
       </div>
-    </WalletContext.Provider>
+    </RecoilRoot>
   );
 }

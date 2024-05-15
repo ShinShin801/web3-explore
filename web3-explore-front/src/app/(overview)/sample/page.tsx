@@ -1,7 +1,8 @@
 "use client";
 import { ethers } from "ethers";
-import React, { useEffect, useContext } from "react";
-import { WalletContext } from "@/app/(overview)/layout";
+import React from "react";
+import { useRecoilState } from "recoil";
+import { addressState } from "@/app/utils/recoils";
 
 import MyTokenGeneratorContract from "@/app/utils/MyTokenGenerator.json";
 import MyTokenContract from "@/app/utils/MyToken.json";
@@ -10,7 +11,7 @@ const buttonStyle =
   "flex h-10 w-3/5 items-center justify-center rounded-lg bg-blue-600 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600";
 
 export default function Page() {
-  const { currentAddress, setCurrentAddress } = useContext(WalletContext);
+  const [currentAddress, setCurrentAddress] = useRecoilState(addressState);
 
   const contractAddress = "0xBe90161986AfeF740FdD7054DFeDB7a987FfeAb1";
   const tokenGenContractABI = MyTokenGeneratorContract.abi;

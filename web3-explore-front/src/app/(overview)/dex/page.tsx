@@ -1,9 +1,10 @@
 "use client";
-import React, { useContext } from "react";
-import { WalletContext } from "@/app/(overview)/layout";
+import React from "react";
+import { useRecoilState } from "recoil";
+import { addressState } from "@/app/utils/recoils";
 
 export default function Home() {
-  const { currentAddress, setCurrentAddress } = useContext(WalletContext);
+  const [currentAddress, setCurrentAddress] = useRecoilState(addressState);
 
   return (
     <>

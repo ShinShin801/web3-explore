@@ -1,8 +1,9 @@
 "use client";
 
 const ethers = require("ethers");
-import React, { useEffect, useContext, useState } from "react";
-import { WalletContext } from "@/app/(overview)/layout";
+import React, { useEffect, useState, useCallback } from "react";
+import { useRecoilState } from "recoil";
+import { addressState } from "@/app/utils/recoils";
 
 import MyTokenGeneratorContract from "@/app/utils/MyTokenGenerator.json";
 import MyTokenContract from "@/app/utils/MyToken.json";
@@ -15,7 +16,7 @@ import { PlusIcon } from "@heroicons/react/24/outline";
 import { convertFromWei } from "@/app/utils/ERC20/utils";
 
 export default function Page() {
-  const { currentAddress, setCurrentAddress } = useContext(WalletContext);
+  const [currentAddress, setCurrentAddress] = useRecoilState(addressState);
   const [tokens, setTokens] = useState<Token[]>([]);
 
   const contractAddress =
@@ -24,11 +25,7 @@ export default function Page() {
 
   const tokenContractABI = MyTokenContract.abi;
 
-  useEffect(() => {
-    init();
-  }, [currentAddress]);
-
-  const init = async () => {
+  const init = useCallback(async () => {
     try {
       if (!currentAddress) {
         console.log("Current address is not available yet.");
@@ -59,7 +56,7 @@ export default function Page() {
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [currentAddress, contractAddress, tokenGenContractABI]);
 
   async function retrieveAllTokenInfo(addresses: string[]): Promise<Token[]> {
     const tokenPromises = addresses.map((address, index) =>
@@ -130,6 +127,10 @@ export default function Page() {
     }
   }
 
+  useEffect(() => {
+    init();
+  }, [init]);
+
   return (
     <div className="container mx-auto px-4">
       <div className="flex flex-col md:flex-row items-center justify-between w-full px-5 py-6">
@@ -146,7 +147,7 @@ export default function Page() {
           <></>
         )}
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
         {tokens.map((token) => (
           <TokenCard key={token.id} token={token} />
         ))}
